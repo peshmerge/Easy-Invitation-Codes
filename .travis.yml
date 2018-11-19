@@ -4,4 +4,5 @@ php:
 
 script:
 # Override default Travis script action [phpunit]
-- php -l *.php
+- php -l baw-invitation-codes/*.php
+- php -l baw-invitation-codes/inc/*.php
