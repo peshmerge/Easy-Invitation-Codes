@@ -235,7 +235,7 @@ function baweic_list_codes() {
 			<a class="add-new-h2" href="<?php echo admin_url( 'admin.php?page=baweic_rand_code' ); ?>"><?php _e( 'Generate codes', 'baweic' ) ;?></a>
 		<?php
 		if ( ! empty( $_GET['s'] ) ) {
-			printf( '<span class="subtitle">' . __('Search results for &#8220;%s&#8221;') . '</span>', esc_html( $_GET['s'] ) );
+			printf( '<span class="subtitle">' . __('Search results for &#8220;%s&#8221;', 'baweic') . '</span>', esc_html( $_GET['s'] ) );
 		}
 		?>
 		</h1>
@@ -257,7 +257,7 @@ function baweic_list_codes() {
 		</ul>
 		<form action="<?php echo admin_url( 'admin.php' ); ?>">
 		<p class="search-box">
-			<label class="screen-reader-text" for="search-text"><?php _e( 'Search by keyword' ); ?>:</label>
+			<label class="screen-reader-text" for="search-text"><?php _e( 'Search by keyword','baweic' ); ?>:</label>
 			<input type="search" id="search-text" name="s" value="<?php _admin_search_query(); ?>" />
 			<input type="hidden" id="page" name="page" value="baweic_list_codes" />
 			<?php submit_button( __( 'Search codes', 'baweic' ), 'button', false, false, array('id' => 'search-submit') ); ?>
@@ -311,7 +311,7 @@ function baweic_list_codes() {
 						</td>
 						<td>
 							<div class="activation">
-								<span class="trash"><a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=baweic_list_codes&action=delete&code=' . esc_attr( $code ) ), 'baweic-delete-' . $code ); ?>"><?php _e( 'Delete' ); ?></a></span>
+								<span class="trash"><a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=baweic_list_codes&action=delete&code=' . esc_attr( $code ) ), 'baweic-delete-' . $code ); ?>"><?php _e( 'Delete', 'baweic' ); ?></a></span>
 							</div>
 						</td>
 					</tr>
