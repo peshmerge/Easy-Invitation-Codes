@@ -19,8 +19,8 @@ function baweic_register_form_add_field() {
 				<style>
 					.baweic_fields_text_link {
 						color: #888;
-						margin: 15px 0 5px;
-						font-size: 12px;
+						margin: -15px 0 5px;
+						font-size: small;
 					}
 				</style>
 				<p id="baweic_fields_text_link" class="baweic_fields_text_link">
