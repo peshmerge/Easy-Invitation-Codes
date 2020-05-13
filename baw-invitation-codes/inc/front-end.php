@@ -21,9 +21,9 @@ function baweic_register_form_add_field() {
 						font-size: small;
 					}
 				</style>
-				<p id="baweic_fields_text_link" class="baweic_fields_text_link">
+				<span id="baweic_fields_text_link" class="baweic_fields_text_link">
 					<?php echo ! empty($baweic_fields['text_link']) ? wp_kses_post($baweic_fields['text_link'], $allowedposttags) : ''; ?>
-				</p>
+				</span>
 				<?php } ?>
 			<?php do_action('bp_invitation_code_errors'); ?>
 			<input name="invitation_code" tabindex="0" type="text" class="input" id="invitation_code" style="text-transform: uppercase" />
