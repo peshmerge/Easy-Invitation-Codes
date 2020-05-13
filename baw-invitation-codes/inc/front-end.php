@@ -23,9 +23,9 @@ function baweic_register_form_add_field() {
 						font-size: 12px;
 					}
 				</style>
-				<span id="baweic_fields_text_link" class="baweic_fields_text_link">
+				<p id="baweic_fields_text_link" class="baweic_fields_text_link">
 					<?php echo ! empty($baweic_fields['text_link']) ? wp_kses_post($baweic_fields['text_link'], $allowedposttags) : ''; ?>
-				</span>
+				</p>
 			<?php } ?>
 		</p>
  	<?php
