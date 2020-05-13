@@ -14,6 +14,9 @@ function baweic_register_form_add_field() {
 	?>
 		<p>
 			<label><?php _e('Invitation Code', 'baweic'); ?> (<?php _e('required', 'buddypress'); ?>)</label>
+
+			<?php do_action('bp_invitation_code_errors'); ?>
+
 			<input name="invitation_code" tabindex="0" type="text" class="input" id="invitation_code" style="text-transform: uppercase" />
 			<?php if (!empty($baweic_fields['link']) && $baweic_fields['link'] == 'on') { ?>
 				<style>
