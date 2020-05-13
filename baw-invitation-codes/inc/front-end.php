@@ -12,22 +12,18 @@ function baweic_register_form_add_field() {
 	$baweic_fields = get_option('baweic_fields');
 
 	?>
-		<p>
-			<label><?php _e('Invitation Code', 'baweic'); ?> (<?php _e('required', 'buddypress'); ?>)</label>
-			<?php if (!empty($baweic_fields['link']) && $baweic_fields['link'] == 'on') { ?>
-				<style>
-					.baweic_fields_text_link {
-						color: #888;						
-						font-size: small;
-					}
-				</style>
-				<span id="baweic_fields_text_link" class="baweic_fields_text_link">
-					<?php echo ! empty($baweic_fields['text_link']) ? wp_kses_post($baweic_fields['text_link'], $allowedposttags) : ''; ?>
-				</span>
-				<?php } ?>
-			<?php do_action('bp_invitation_code_errors'); ?>
-			<input name="invitation_code" tabindex="0" type="text" class="input" id="invitation_code" style="text-transform: uppercase" />
-		</p>
+		<label>
+			<?php _e('Invitation Code', 'baweic'); ?> (<?php _e('required', 'buddypress'); ?>
+		</label>
+		<?php do_action('bp_invitation_code_errors'); ?>
+		<input name="invitation_code" tabindex="0" type="text" 
+				class="input" id="invitation_code" 
+				style="text-transform: uppercase" />
+		<?php if (!empty($baweic_fields['link']) && $baweic_fields['link'] == 'on') { ?>
+			<p id="baweic_fields_text_link" class="field-visibility-settings-notoggle">
+				<?php echo ! empty($baweic_fields['text_link']) ? wp_kses_post($baweic_fields['text_link'], $allowedposttags) : ''; ?>
+			</p>
+		<?php } ?>
  	<?php
 }
 
@@ -73,7 +69,7 @@ function baweic_login_footer() {
 function registration_add_code_invite() {
 	?>
 		<div class="register-section" id="profile-details-section">
-			<h4><?php _e( 'Invitation Code', 'buddypress' ); ?></h4>
+			<h2><?php _e( 'Invitation Code', 'buddypress' ); ?></h2>
 			<?php do_action('register_form'); ?>
 		</div>
 	<?php
