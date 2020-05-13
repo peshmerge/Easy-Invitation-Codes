@@ -6,7 +6,6 @@ This is a fork that adds in [BuddyPress](https://buddypress.org) support into th
 
 ---
 
-
 This is UNOFFICAL fork of Easy Invitation Codes Wordpress plugin https://wordpress.org/plugins/baw-invitation-codes/
 I forked it and solved a couple of problems and php warnings. I use the plugin on of my client's site and it was so annoying that the proplem wasn't solved. So I decided to solve the problems and release my own version without ignoring  the original author and the maker of the plugin. 
 
