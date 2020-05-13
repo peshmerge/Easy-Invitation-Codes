@@ -10,6 +10,7 @@ add_action('register_form', 'baweic_register_form_add_field');
 function baweic_register_form_add_field() {
 	global $allowedposttags;
 	$baweic_fields = get_option('baweic_fields');
+	
 	?>
 		<p>
 			<label><?php _e('Invitation Code', 'baweic'); ?><?php _e('required', 'buddypress'); ?></label>
@@ -37,8 +38,8 @@ function baweic_registration_errors($errors, $sanitized_user_login, $user_email)
 	}
 
 	$baweic_options = get_option('baweic_options');
-
 	$invitation_code = isset($_POST['invitation_code']) ? strtoupper($_POST['invitation_code']) : '';
+
 	if (!array_key_exists($invitation_code, $baweic_options['codes'])) {
 		add_action('login_head', 'wp_shake_js', 12);
 		return new WP_Error('authentication_failed', __('<strong>ERROR</strong>: Wrong Invitation Code.', 'baweic'));
@@ -50,6 +51,7 @@ function baweic_registration_errors($errors, $sanitized_user_login, $user_email)
 		$baweic_options['codes'][ $invitation_code ]['users'][] = $sanitized_user_login;
 		update_option('baweic_options', $baweic_options);
 	}
+
 	return $errors;
 }
 
@@ -66,3 +68,41 @@ function baweic_login_footer() {
 		<?php
 	endif;
 }
+
+/* BuddyPress */
+function registration_add_code_invite() {
+	?>
+		<div class="register-section" id="profile-details-section">
+			<h4><?php _e( 'Invitation Code', 'buddypress' ); ?></h4>
+			<?php do_action('register_form'); ?>
+		</div>
+	<?php
+}
+add_action('bp_after_account_details_fields', 'registration_add_code_invite', 20);
+
+//Update the Coupon Codes on successful registrations
+function invite_code_update() {
+	$baweic_options = get_option('baweic_options');
+	$invitation_code = isset($_POST['invitation_code']) ? strtoupper($_POST['invitation_code']) : '';
+
+	$baweic_options['codes'][ $invitation_code ]['leftcount']--;
+	$baweic_options['codes'][ $invitation_code ]['users'][] = $sanitized_user_login;
+	update_option('baweic_options', $baweic_options);
+}
+add_action('bp_before_registration_confirmed', 'invite_code_update', 20);
+
+function registration_validate() {
+	$bp = buddypress();
+	$baweic_options = get_option('baweic_options');
+	$invitation_code = isset($_POST['invitation_code']) ? strtoupper($_POST['invitation_code']) : '';
+
+	if (!array_key_exists($invitation_code, $baweic_options['codes'])) {
+		add_action('login_head', 'wp_shake_js', 12);
+		$bp->signup->errors['invitation_code'] = __('Invalid invitation code.', 'baweic');
+	} elseif (isset($baweic_options['codes'][ $invitation_code ]) && ! $baweic_options['codes'][ $invitation_code ]['leftcount']){
+		add_action('login_head', 'wp_shake_js', 12);
+		$bp->signup->errors['invitation_code'] = __('Invitation code expired.', 'baweic');
+	}
+}
+add_action('bp_signup_validate', 'registration_validate');
+
