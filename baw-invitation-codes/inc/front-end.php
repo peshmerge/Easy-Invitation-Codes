@@ -10,17 +10,17 @@ add_action('register_form', 'baweic_register_form_add_field');
 function baweic_register_form_add_field() {
 	global $allowedposttags;
 	$baweic_fields = get_option('baweic_fields');
-	
+
 	?>
 		<p>
-			<label><?php _e('Invitation Code', 'baweic'); ?><?php _e('required', 'buddypress'); ?></label>
+			<label><?php _e('Invitation Code', 'baweic'); ?> (<?php _e('required', 'buddypress'); ?>)</label>
 			<input name="invitation_code" tabindex="0" type="text" class="input" id="invitation_code" style="text-transform: uppercase" />
 			<?php if (!empty($baweic_fields['link']) && $baweic_fields['link'] == 'on') { ?>
 				<style>
 					.baweic_fields_text_link {
-						font-style:italic;
-						position:relative;
-						top:-15px
+						color: #888;
+						margin: 15px 0 5px;
+						font-size: 12px;
 					}
 				</style>
 				<span id="baweic_fields_text_link" class="baweic_fields_text_link">
