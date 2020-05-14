@@ -13,7 +13,7 @@ function baweic_register_form_add_field() {
 
 	?>
 		<label>
-			<?php _e('Invitation Code', 'baweic'); ?> (<?php _e('required', 'buddypress'); ?>
+			<?php _e('Invitation Code', 'baweic'); ?> (<?php _e('required)', 'buddypress'); ?>
 		</label>
 		<?php do_action('bp_invitation_code_errors'); ?>
 		<input name="invitation_code" tabindex="0" type="text" 
@@ -66,6 +66,9 @@ function baweic_login_footer() {
 }
 
 /* BuddyPress */
+
+/* Add invitation code to registration screen */
+add_action('bp_after_account_details_fields', 'registration_add_code_invite', 20);
 function registration_add_code_invite() {
 	?>
 		<div class="register-section" id="profile-details-section">
@@ -74,19 +77,9 @@ function registration_add_code_invite() {
 		</div>
 	<?php
 }
-add_action('bp_after_account_details_fields', 'registration_add_code_invite', 20);
 
-//Update the Coupon Codes on successful registrations
-function invite_code_update() {
-	$baweic_options = get_option('baweic_options');
-	$invitation_code = isset($_POST['invitation_code']) ? strtoupper($_POST['invitation_code']) : '';
-
-	$baweic_options['codes'][ $invitation_code ]['leftcount']--;
-	$baweic_options['codes'][ $invitation_code ]['users'][] = $sanitized_user_login;
-	update_option('baweic_options', $baweic_options);
-}
-add_action('bp_before_registration_confirmed', 'invite_code_update', 20);
-
+/* Validate invitation code during registration validation */
+add_action('bp_signup_validate', 'registration_validate');
 function registration_validate() {
 	$bp = buddypress();
 	$baweic_options = get_option('baweic_options');
@@ -100,5 +93,33 @@ function registration_validate() {
 		$bp->signup->errors['invitation_code'] = __('Invitation code expired.', 'baweic');
 	}
 }
-add_action('bp_signup_validate', 'registration_validate');
 
+/* Save invitation code in bbpress metadata.
+ * (pending account activation?) 
+ */
+add_filter('bp_signup_usermeta', 'invite_code_update');
+function invite_code_update($usermeta = array()) {
+	if (isset($_POST['invitation_code'])) {
+		$invitation_code = strtoupper($_POST['invitation_code']);
+		$usermeta['invitation_code'] = $invitation_code;
+	}
+
+	return $usermeta;
+}
+
+/* (Upon activation?) 
+ * Save invitation code in user's metadata and deduct from use count 
+ */
+add_action( 'bp_core_signup_user', 'invite_code_sync', 10, 5);
+function invite_code_sync($user_id, $user_login, $user_password, $user_email, $usermeta) {
+	if (isset($_POST['invitation_code'])) {
+		$baweic_options = get_option('baweic_options');
+		$invitation_code = strtoupper($_POST['invitation_code']);
+		bp_update_user_meta( $user_id, 'invitation_code',  $invitation_code  );	
+
+		$baweic_options['codes'][ $invitation_code ]['leftcount']--;
+		$baweic_options['codes'][ $invitation_code ]['users'][] = $sanitized_user_login;
+		update_option('baweic_options', $baweic_options);
+	}
+}
+?>

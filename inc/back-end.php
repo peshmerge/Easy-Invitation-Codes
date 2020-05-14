@@ -350,3 +350,46 @@ function baweic_admin_notice_noone() {
 		echo '<div class="error" id="message"><p>' . sprintf(__('Nobody can register because you did not set any invitation codes, <a href="%s">do it now</a>!', 'baweic'), admin_url('admin.php?page=baweic_add_code')) . '</p></div>';
 	}
 }
+
+/* Show invitation code in user profile view (admin interface) */
+add_action('edit_user_profile', 'show_invitation_code', 20, 1);
+function show_invitation_code($user) {
+	$invitation_code = get_user_meta( $user->ID, 'invitation_code', true );
+	?>
+	<h3><?php _e('Invitation Codes'); ?></h3>
+    <table class="form-table">
+        <tr>
+            <th>
+                <label for='invitation_code'>Invitation Code Used</label>
+            </th>
+            <td>
+                <input name='invitation_code' value='<?php echo $invitation_code ?>' class='regular text code' disabled='true'/>
+            </td>
+        </tr>
+    </table>
+	<?php
+}
+
+/* Show invitation codes in bbpress pending signup screen/table */
+add_filter('bp_members_signup_columns', 'add_invitation_code_column', 10, 1);
+function add_invitation_code_column($columns = array()) {
+    $columns['invitation_code'] = 'Invitation Code'; //_x('Invitation Code', 'Invitation code used to join site', 'baweic');;
+    return $columns;
+}    
+
+/* Show invitation code content in bbpress pending signup screen/table */
+add_filter('bp_members_signup_custom_column', 'show_invitation_code_column', 10, 3);
+function show_invitation_code_column($value = '', $column_name = '', $signup_object = null) {
+    if ('invitation_code' === $column_name) {
+		return $signup_object->meta['invitation_code'];
+	}
+
+    return $value;
+}
+
+/* The following two filters will show the invitation code in the general
+ * user listing table, on the admin Users screen
+ */
+// add_filter('manage_users_columns', 'add_invitation_code_column', 10, 1);
+// add_filter('manage_users_custom_column', 'show_invitation_code_column', 10, 3);
+
